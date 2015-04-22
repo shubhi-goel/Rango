@@ -1,19 +1,43 @@
+var mongo = require('mongodb').MongoClient,
+	client = require('socket.io').listen(8080).sockets,
+	score1 = 0,
+	score2 = 0,
+	ques,
+	answer,
+	x = 0;
 
-var fs = require('fs'); 
-var http = require('http'); 
-var url = require('url'); 
-var PAGE_DIRECTORY = "Rango/"; 
-http.createServer( function (request, result) {
-var urlObj = url.parse(request.url, true, false); 
-	fs.readFile(PAGE_DIRECTORY + urlObj.pathname, function (error, page_contents) { 
-		if (error) { 
-			result.writeHead(404); 
-			result.end(JSON.stringify(error)); 
-			return; 
-		} 
-		result.writeHead(200); 
-		result.end(page_contents);
-		 }); 
-}).listen(3000);
-console.log("Server has started :)");
+mongo.connect('mongodb://192.168.1.2/rango',function(err,db){
+	if(err) throw err;
 
+	client.on('connection',function (socket) {
+		console.log("Someone has connected");
+
+		var col = db.collection('questions');
+
+		socket.on('changeQuestion',function(){
+			console.log("changeQuestion");
+			col.find().limit(100).sort({_id: 1}).toArray(function(err,res){
+				if(err) throw err;
+				x = Math.floor((Math.random() * 7) + 0);
+				console.log(x);
+				ques = res[x].ques;
+				answer = res[x].ans;
+				client.emit('updateScreen',{ques: ques,score: "score 1: "+score1+", score 2: "+score2});
+			});
+		});
+
+
+		socket.on('clicked', function(data)
+		{
+			console.log(data.user+" clicked"+ data.ans);
+			if(data.ans == answer){
+				if(data.user == 1)
+					score1++;
+				else
+					score2++;
+			}
+			console.log("score 1: "+score1+", score 2: "+score2);
+
+		});
+	});
+});

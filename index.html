@@ -13,19 +13,20 @@
 
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="script.js"></script>
   </head>
-
-
 <body>
-
+<input type="text" id="name" placeholder="Enter your name">
 <div id="myCarousel" class="carousel slide">
 	<div class="carousel-inner" role="listbox">
         <div class="item active">
           <img class="first-slide" url="">
           <div class="container">
             <div class="carousel-caption">
+            <h1 id="score"></h1>
               <h1>Questions</h1>
-              <p>question will be displayed here!</p>
+              <p id="question">question will be displayed here!</p>
             </div>
           </div>
         </div>
@@ -39,12 +40,12 @@
           	
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
-       	   <button type="button" class="btn btn-default btn-circle btn-xl">
+       	   <button type="button" class="btn btn-default btn-circle btn-xl" onclick="button1()">
 				<i class="glyphicon glyphicon-ok"></i>
 			</button>
 		</div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
-          	<button type="button" class="btn btn-default btn-circle btn-xl">
+          	<button type="button" class="btn btn-default btn-circle btn-xl" onclick="button2()">
 				<i class="glyphicon glyphicon-ok"></i>
 			</button>
         </div>
